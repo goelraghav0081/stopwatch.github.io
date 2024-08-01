@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: rgb(63, 63, 63);
+
+    }
+
+    .container {
+        display: flex;
+        /* background-color: red; */
+        justify-content: center;
+        align-items: center;
+        height: 40vh;
+        font-size: 10rem;
+        color: orangered;
+    }
+
+    .buttoncontain {
+        display: flex;
+        /* background-color: red; */
+        justify-content: center;
+        align-items: center;
+        /* height: 40vh; */
+        font-size: 10rem;
+
+    }
+
+    button {
+        font-size: 2rem;
+        font-weight: bold;
+        font-style: italic;
+        color: rgb(29, 29, 29);
+        width: 10rem;
+        height: 10rem;
+        border-radius: 5rem;
+        margin: 4px auto;
+        background-color: rgb(211, 82, 35);
+        /* border: 6px dashed orange; */
+        border: 3px solid #357a38;
+        text-transform: uppercase;
+        box-shadow: 0 8px #357a38;
+        /* box-shadow: 0 10px rgb(20, 20, 20); */
+
+        transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    button:hover {
+        box-shadow: 0 6px #357a38;
+        transform: translateY(6px);
+        opacity: .9;
+    }
+
+    button:active {
+        box-shadow: none;
+        transform: translateY(12px);
+    }
+
+    #ul li {
+        text-decoration: none;
+        list-style: none;
+    }
+
+    li {
+        display: flex;
+        justify-content: space-around;
+        color: orangered;
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 6px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div id="hour">
+            00
+        </div>
+        <div>:</div>
+        <div id="min">
+            00
+        </div>
+        <div>:</div>
+        <div id="sec">
+            00
+        </div>
+        <div>:</div>
+        <div id="milsec">
+            00
+        </div>
+    </div>
+    <div class="buttoncontain">
+        <button id="lap">Lap</button>
+        <button id="start">Start</button>
+        <!-- <button id="stop">Stop</button> -->
+    </div>
+    <div class="laplist">
+        <ul id="ul">
+            <!-- <li><span>LAPS</span><span><span>HR:</span><span>MIN:</span><span>SEC:</span><span>MS</span></li> 
+           <hr> -->
+        </ul>
+    </div>
+    <script>
+        let milsec = document.getElementById("milsec");
+let sec = document.getElementById("sec");
+let min = document.getElementById("min");
+let hour = document.getElementById("hour");
+let start = document.getElementById("start");
+let lap = document.getElementById("lap");
+let ul = document.getElementById("ul");
+
+let milsecvar = 0;
+let secvar = 0;
+let minvar = 0;
+let hourvar = 0;
+let isRunning = false;
+let interval;
+let x = 1;
+
+function startTimer() {
+    start.style.backgroundColor = "red";
+    if (!isRunning) {
+        interval = setInterval(() => {
+            milsecvar++;
+            if (milsecvar <= 9) {
+                milsec.innerHTML = '0' + milsecvar;
+            } else {
+                milsec.innerHTML = milsecvar;
+            }
+
+            if (milsecvar % 60 === 0) {
+                secvar++;
+                milsecvar = 0;
+                if (secvar <= 9) {
+                    sec.innerHTML = '0' + secvar;
+                } else {
+                    sec.innerHTML = secvar;
+                }
+
+                if (secvar % 60 === 0) {
+                    minvar++;
+                    secvar = 0;
+                    if (minvar <= 9) {
+                        min.innerHTML = '0' + minvar;
+                    } else {
+                        min.innerHTML = minvar;
+                    }
+
+                    if (minvar % 60 === 0) {
+                        hourvar++;
+                        minvar = 0;
+                        if (hourvar <= 9) {
+                            hour.innerHTML = '0' + hourvar;
+                        } else {
+                            hour.innerHTML = hourvar;
+                        }
+                    }
+                }
+            }
+        }, 1000 / 60);
+        isRunning = true;
+        start.innerHTML = 'Stop';
+    }
+}
+
+function stopTimer() {
+    start.style.backgroundColor = "rgb(211, 82, 35)";
+    clearInterval(interval);
+    isRunning = false;
+    start.innerHTML = "Start";
+}
+
+function laprec() {
+    ul.innerHTML = ul.innerHTML + `<li><span>Lap ${x}</span> - <span>${hour.innerHTML} : ${min.innerHTML} : ${sec.innerHTML} : ${milsec.innerHTML}</span></li><hr>`;
+    x++;
+}
+
+function reset() {
+    milsecvar = 0;
+    secvar = 0;
+    minvar = 0;
+    hourvar = 0;
+    x = 1;
+    hour.innerHTML = "00";
+    min.innerHTML = "00";
+    sec.innerHTML = "00";
+    milsec.innerHTML = "00";
+    ul.innerHTML = "";
+}
+
+lap.addEventListener('click', () => {
+    if (isRunning) {
+        laprec();
+    } else {
+        reset();
+        lap.style.backgroundColor = "rgb(211, 82, 35)";
+        lap.innerHTML = "Lap";
+    }
+});
+
+start.addEventListener('click', () => {
+    if (isRunning) {
+        stopTimer();
+        lap.style.backgroundColor = "red";
+        lap.innerHTML = "Reset";
+    } else {
+        startTimer();
+        lap.style.backgroundColor = "rgb(211, 82, 35)";
+        lap.innerHTML = "Lap";
+    }
+});
+    </script>
+</body>
+
+</html>
